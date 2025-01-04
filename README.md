@@ -9,6 +9,7 @@ https://github.com/itijuku/scratchtool/wiki
 pip install -U scratchtool
 ```
 
+## for example
 ```python
 import scratchtool as tool
 
