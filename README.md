@@ -6,5 +6,5 @@ https://github.com/itijuku/scratchtool/wiki
 
 ## install
 ```
-pip install scratchtool
+pip install -U scratchtool
 ```
