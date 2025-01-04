@@ -15,6 +15,6 @@ pip install -U scratchtool
 ```python
 import scratchtool as tool
 
-user = tool.user("itijuku")
-print(user.get_followers())
+user = tool.user("griffpatch")
+print(user.get_following())
 ```
