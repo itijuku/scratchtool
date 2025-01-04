@@ -8,3 +8,10 @@ https://github.com/itijuku/scratchtool/wiki
 ```
 pip install -U scratchtool
 ```
+
+```python
+import scratchtool as tool
+
+user = tool.user("purupann")
+print(user.get_followers())
+```
