@@ -1,8 +1,12 @@
 from setuptools import setup, find_packages
 
+#python setup.py sdist bdist_wheel
+#python -m twine upload dist/*
+
+
 setup(
     name='scratchtool',
-    version='1.0.3',
+    version='1.0.4',
     author="itijiku",
     author_email="kanjukuitijuku@gmail.com",
     description="A package for working with Scratch data.",
