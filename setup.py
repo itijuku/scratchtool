@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='scratchtool',
-    version='1.1.6',
+    version='1.1.8',
     author="itijiku",
     author_email="kanjukuitijuku@gmail.com",
     description="A package for working with Scratch data.",
