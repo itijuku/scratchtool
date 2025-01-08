@@ -1,4 +1,4 @@
-from _cloud_class import _cloud
+from ._cloud_class import _cloud
 
 class login():
     def __init__(self,username:str,password:str):
