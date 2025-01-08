@@ -1,3 +1,3 @@
-from .user_class import user
-from .project_class import project
-from .login_class import login
+from ._user_class import user
+from ._project_class import project
+from ._login_class import login
