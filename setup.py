@@ -6,15 +6,15 @@ from setuptools import setup, find_packages
 
 setup(
     name='scratchtool',
-    version='1.1.8',
+    version='1.3.0',
     author="itijiku",
-    author_email="kanjukuitijuku@gmail.com",
     description="A package for working with Scratch data.",
     url="https://github.com/itijuku/scratchtool",
     packages=find_packages(),
     install_requires=[
         'requests>=2.31.0',
         'beautifulsoup4>=4.12.3',
+        'websockets'
     ],
     entry_points={
         'console_scripts': [
