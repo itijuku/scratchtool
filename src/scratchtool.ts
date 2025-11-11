@@ -4,6 +4,7 @@ import chrome from "selenium-webdriver/chrome.js";
 import * as cheerio from "cheerio";
 
 import {user} from "./user.js";
+import {project} from "./project.js";
 
 function sleep(ms:number):Promise<void>{
     return new Promise(resolve=>setTimeout(resolve,ms));
@@ -25,7 +26,6 @@ export class metaData{
             cookie += `${key}=${cookies[key]}; `
         }
         cookie = cookie.slice(0,cookie.length - 2);
-        console.log("cookie",cookie)
         this.parsedCookies = cookie;
     }
 }
@@ -101,7 +101,11 @@ export class scratchtool{
         }
     }
 
-    connect_user(targetUserName:string){
-        return user.build(targetUserName,new metaData(this._username,this._password,this.cookies));
+    connect_user(username:string){
+        return user.build(username,new metaData(this._username,this._password,this.cookies));
+    }
+
+    connect_project(projectId:string){
+        return project.build(projectId,new metaData(this._username,this._password,this.cookies));
     }
 }

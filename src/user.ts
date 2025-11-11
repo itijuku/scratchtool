@@ -68,9 +68,11 @@ export class user{
                     "X-Csrftoken":csrftoken,
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
                     "Origin": "https://scratch.mit.edu",
-                    "Referer": `https://scratch.mit.edu/users/${this.targetUserName}/`,
+                    "Referer": `https://scratch.mit.edu/`,
                     "Content-Type": "application/json",
                     "x-requested-with":"XMLHttpRequest",
+                    "priority":"u=1, i",
+                    "content-length":"0",
                 },
                 body:JSON.stringify(body)
             }
