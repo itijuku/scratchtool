@@ -34,7 +34,7 @@ export class project{
                     "Referer": `https://scratch.mit.edu/`,
                     "Content-Type": "application/json",
                     "x-requested-with":"XMLHttpRequest",
-                    "content-length":"0",
+                    "priority":"u=1, i",
                 },
                 body:JSON.stringify(body)
             }
