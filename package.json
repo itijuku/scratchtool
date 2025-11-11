@@ -1,0 +1,20 @@
+{
+  "name": "scratchtool",
+  "version": "1.0.0",
+  "main": "scratchtool.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/cheerio": "^0.22.35",
+    "@types/node-notifier": "^8.0.5",
+    "@types/selenium-webdriver": "^4.35.3",
+    "@types/ws": "^8.18.1",
+    "chromedriver": "^142.0.1"
+  }
+}

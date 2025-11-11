@@ -1,0 +1,4 @@
+dist/
+memo/
+node_modules/
+test/
