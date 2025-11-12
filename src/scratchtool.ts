@@ -1,5 +1,3 @@
-import * as cheerio from "cheerio";
-
 import {user} from "./user.js";
 import {project} from "./project.js";
 
@@ -35,36 +33,6 @@ export class metaData{
         cookie = cookie.slice(0,cookie.length - 2);
 
         return cookie;
-    }
-}
-
-export class userMetaData{
-    username:string;
-    id:string = "";
-    thumbnail_url:string = "";
-    
-    constructor(username:string){
-        this.username = username;
-    }
-    async init(){
-        const res = await fetch(
-            `https://scratch.mit.edu/site-api/comments/user/${this.username}/?page=1`,
-            {
-                method:"GET",
-            }
-        )
-
-        const html = await res.text();
-
-        const $ = cheerio.load(html);
-        const png = $("img").eq(2);
-        const src = png.attr("src");
-        if(src){
-            const img = src.split("/")[src.split("/").length - 1];
-            this.id = img ? String(img.split("_")[0]) : "";
-
-            this.thumbnail_url = `//uploads.scratch.mit.edu/users/avatars/${this.id}.png`;
-        }
     }
 }
 
