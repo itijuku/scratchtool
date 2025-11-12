@@ -33,7 +33,7 @@ export class commentMetaData{
 
     async reply(content:string){
         const cd = await comment.buildForPost(content,this.metaData,this.id,this.projectMetaData);
-        cd.reply_comment_inProject();
+        await cd.reply_comment_inProject(this.author_id);
     }
 
     static commentObjectParser(objects:[{[name:string]:any}],metaData:metaData,projectMetaData:projectMetaData|string=""):commentMetaData[]{
@@ -53,9 +53,10 @@ export class comment{
     private comment_id:string;
     private number:number;
     private projectMetaData:projectMetaData|string;
+    private authorId:projectMetaData|string;
 
     private constructor(content:string,parentId:string,metaData:metaData,comment_id:string="",number:number=0,
-        projectMetaData:projectMetaData|string=""
+        projectMetaData:projectMetaData|string="",authorId:string=""
     ){
         this.content = content;
         this.targetParentId = parentId;
@@ -63,10 +64,40 @@ export class comment{
         this.comment_id = comment_id;
         this.number = number;
         this.projectMetaData = projectMetaData;
+        this.authorId = authorId;
     }
 
     static async buildForPost(content:string,metaData:metaData,parentId:string="",projectMetaData:projectMetaData|string=""){
-        return new comment(content,parentId,metaData,"",0,projectMetaData);
+        if(typeof projectMetaData === "string"){
+            throw new Error("projectMetaData is not found");
+        }
+
+        const author = projectMetaData.metaDatasJson["author"]["username"];
+        const x_token = metaData.otherMetaDatas["x-token"] || "";
+        console.log(`https://api.scratch.mit.edu/users/${author}/projects/${projectMetaData.projectId}/comments/${parentId}`)
+        const res = await fetch(
+            `https://api.scratch.mit.edu/users/${author}/projects/${projectMetaData.projectId}/comments/${parentId}`,
+            {
+                method:"GET",
+                headers:{
+                    "cookie":metaData.parsedCookies,
+                    "content-type":"application/json",
+                    "referer":`https://scratch.mit.edu/`,
+                    "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+                    "origin":"https://scratch.mit.edu",
+                    "x-token":x_token,
+                },
+            }
+        );
+
+        if(Math.floor(res.status/100) !== 2){
+            throw new Error(`エラー ステータスコード:${res.status}`);
+        }
+
+        const resJson = await res.json();
+        console.log(resJson)
+
+        return new comment(content,parentId,metaData,"",0,projectMetaData,resJson["author"]["id"]);
     }
 
     static async buildForDelete(comment_id:string,metaData:metaData,){
@@ -232,7 +263,8 @@ export class comment{
         } 
     }
 
-    async reply_comment_inProject(){
+    async reply_comment_inProject(author_id:string=""){
+        let authorId = author_id || this.authorId;
         if(typeof this.projectMetaData === "string"){
             throw new Error("projectMetaData is not found");
         }
@@ -240,7 +272,7 @@ export class comment{
         const csrftoken = this.metaData.cookies["scratchcsrftoken"] || "";
         const x_token = this.metaData.otherMetaDatas["x-token"] || "";
         const body = {
-            "commentee_id":this.metaData.otherMetaDatas["id"],
+            "commentee_id":authorId,
             "parent_id":this.targetParentId,
             "content":this.content,
         }
@@ -265,6 +297,6 @@ export class comment{
 
         if(Math.floor(res.status/100) !== 2){
             throw new Error(`エラー ステータスコード:${res.status}`);
-        } 
+        }
     }
 }

@@ -3,6 +3,7 @@ import path from "path";
 
 import {metaData} from "./scratchtool.js"
 import {comment} from "./comment.js"
+import {user} from "./user.js"
 
 export class projectMetaData{ 
     projectId:string;
