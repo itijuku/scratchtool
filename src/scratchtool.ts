@@ -126,24 +126,15 @@ export class scratchtool{
         this.otherMetaDatas["flags"] = resJson["flags"];
     }
 
-        // await sleep(50)
-
-        // driver.findElement(By.className("login-item")).click();
-        // await sleep(50)
-        // const loginWrapper = await driver.findElement(By.className("login"));
-        // const inputs = await loginWrapper.findElements(By.tagName("input"));
-        // inputs[0]?.sendKeys(this.username);
-        // inputs[1]?.sendKeys(this.password);
-        // const sendButton = loginWrapper.findElement(By.tagName("button"));
-        // sendButton.click();
-
-        // await sleep(6000);
-
     connect_user(username:string){
         return user.build(username,new metaData(this.username,this.password,this.cookies,this.otherMetaDatas));
     }
 
     connect_project(projectId:string){
         return project.build(projectId,new metaData(this.username,this.password,this.cookies,this.otherMetaDatas));
+    }
+
+    create_project(title:string = "title"){
+        return project.create_project_build(title,new metaData(this.username,this.password,this.cookies,this.otherMetaDatas));
     }
 }
