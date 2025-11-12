@@ -1,4 +1,5 @@
 # [document](https://github.com/itijuku/scratchtool/wiki/document)
+#### More quickly,more functions.
 
 # Sample program
 ```typescript
