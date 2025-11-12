@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 
 import {metaData} from "./scratchtool.js"
+import {comment} from "./comment.js"
 
 export class projectMetaData{ 
     projectId:string;
@@ -260,35 +261,12 @@ export class project{
     }
 
     async post_comment(content:string){
-        const csrftoken = this.metaData.cookies["scratchcsrftoken"] || "";
-        const x_token = this.metaData.otherMetaDatas["x-token"] || "";
+        const cd = await comment.buildForPost(content,this.metaData);
+        cd.post_comment_inProject(this.targetProjectId);
+    }
 
-        const body = {
-            "commentee_id":"",
-            "parent_id":"",
-            "content":content,
-        }
-
-        const res = await fetch(
-            `https://api.scratch.mit.edu/proxy/comments/project/${this.targetProjectId}`,
-            {
-                method:"POST",
-                headers:{
-                    "x-csrftoken":csrftoken,
-                    "x-requested-with":"XMLHttpRequest",
-                    "cookie":this.metaData.parsedCookies,
-                    "content-type":"application/json",
-                    "referer":`https://scratch.mit.edu/`,
-                    "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
-                    "origin":"https://scratch.mit.edu",
-                    "x-token":x_token,
-                },
-                body:JSON.stringify(body),
-            }
-        );
-
-        if(Math.floor(res.status/100) !== 2){
-            throw new Error(`エラー ステータスコード:${res.status}`);
-        }
+    async reply_comment(content:string,parent_id:string){
+        const cd = await comment.buildForPost(content,this.metaData,parent_id);
+        cd.reply_comment();
     }
 }

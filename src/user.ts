@@ -1,6 +1,7 @@
 import * as cheerio from "cheerio";
 
 import {metaData} from "./scratchtool.js"
+import {comment} from "./comment.js"
 
 export class userMetaData{
     username:string;
@@ -49,6 +50,28 @@ export class user{
         return new user(username,metaData,md);
     }
 
+    async follower_count():Promise<number>{
+        const res = await fetch(`https://scratch.mit.edu/users/${this.targetUserName}/followers/`);
+        
+        const html = await res.text();
+        const $ = cheerio.load(html);
+        const data = $("h2").text();
+        const followerCount = data.split("(")[1]?.split(")")[0];
+        
+        return Number(followerCount);
+    }
+
+    async following_count():Promise<number>{
+        const res = await fetch(`https://scratch.mit.edu/users/${this.targetUserName}/following/`);
+        
+        const html = await res.text();
+        const $ = cheerio.load(html);
+        const data = $("h2").text();
+        const followingCount = data.split("(")[1]?.split(")")[0];
+        
+        return Number(followingCount);
+    }
+
     async follow(){
         const body = {
             "id": this.targetUserName,
@@ -89,7 +112,8 @@ export class user{
             "comments_allowed": true
         }
         const csrftoken = this.metaData.cookies["scratchcsrftoken"] || "";
-        const res = await fetch(
+        const
+         res = await fetch(
             `https://scratch.mit.edu/site-api/users/followers/${this.targetUserName}/remove/?usernames=${this.metaData.username}`,
             {
                 method:"PUT",
@@ -109,5 +133,20 @@ export class user{
         if(Math.floor(res.status/100) !== 2){
             throw new Error(`エラー ステータスコード:${res.status}`);
         }
+    }
+
+    async post_comment(content:string){
+        const cd = await comment.buildForPost(content,this.metaData);
+        cd.post_comment_inUser();
+    }
+
+    async reply_comment(content:string,parent_id:string){
+        const cd = await comment.buildForPost(content,this.metaData,parent_id);
+        cd.reply_comment();
+    }
+
+    async delete_comment(comment_id:string,){
+        const cd = await comment.buildForDelete(comment_id,this.metaData);
+        cd.delete_comment_inUser();
     }
 }
