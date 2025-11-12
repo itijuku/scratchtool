@@ -1,44 +1,43 @@
 import {metaData,userMetaData} from "./scratchtool.js"
 
 export class user{
-    targetUserName:string;
-    _metaData:metaData;
-    _userMetaData:userMetaData;
+    private targetUserName:string;
+    private metaData:metaData;
+    private userMetaData:userMetaData;
 
-    private constructor(username:string,_metaData:metaData,_userMetaData:userMetaData){
+    private constructor(username:string,metaData:metaData,userMetaData:userMetaData){
         this.targetUserName = username;
-        this._metaData = _metaData;
-        this._userMetaData = _userMetaData;
+        this.metaData = metaData;
+        this.userMetaData = userMetaData;
     }
 
-    static async build(username:string,_metaData:metaData){
+    static async build(username:string,metaData:metaData){
         const md = await new userMetaData(username);
         await md.init();
-        return new user(username,_metaData,md);
+        return new user(username,metaData,md);
     }
 
     async follow(){
         const body = {
             "id": this.targetUserName,
-            "userId": this._userMetaData.id,
+            "userId": this.userMetaData.id,
             "username": this.targetUserName,
-            "thumbnail_url": this._userMetaData.thumbnail_url,
+            "thumbnail_url": this.userMetaData.thumbnail_url,
             "comments_allowed": true
         }
-        const csrftoken = this._metaData.cookies["scratchcsrftoken"] ?? "";
-
+        const csrftoken = this.metaData.cookies["scratchcsrftoken"] ?? "";
         const res = await fetch(
-            `https://scratch.mit.edu/site-api/users/followers/${this.targetUserName}/add/?usernames=${this._metaData.username}`,
+            `https://scratch.mit.edu/site-api/users/followers/${this.targetUserName}/add/?usernames=${this.metaData.username}`,
             {
                 method:"PUT",
                 headers:{
-                    "Cookie":this._metaData.parsedCookies,
-                    "X-Csrftoken":csrftoken,
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
-                    "Origin": "https://scratch.mit.edu",
-                    "Referer": `https://scratch.mit.edu/users/${this.targetUserName}/`,
-                    "Content-Type": "application/json",
+                    "x-csrftoken":csrftoken,
                     "x-requested-with":"XMLHttpRequest",
+                    "cookie":this.metaData.parsedCookies,
+                    "content-type":"application/json",
+                    "referer":`https://scratch.mit.edu/users/${this.targetUserName}/`,
+                    "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+                    "origin":"https://scratch.mit.edu",
                 },
                 body:JSON.stringify(body)
             }
@@ -52,27 +51,24 @@ export class user{
     async unfollow(){
         const body = {
             "id": this.targetUserName,
-            "userId": this._userMetaData.id,
+            "userId": this.userMetaData.id,
             "username": this.targetUserName,
-            "thumbnail_url": this._userMetaData.thumbnail_url,
+            "thumbnail_url": this.userMetaData.thumbnail_url,
             "comments_allowed": true
         }
-        const csrftoken = this._metaData.cookies["scratchcsrftoken"] ?? "";
-
+        const csrftoken = this.metaData.cookies["scratchcsrftoken"] || "";
         const res = await fetch(
-            `https://scratch.mit.edu/site-api/users/followers/${this.targetUserName}/remove/?usernames=${this._metaData.username}`,
+            `https://scratch.mit.edu/site-api/users/followers/${this.targetUserName}/remove/?usernames=${this.metaData.username}`,
             {
                 method:"PUT",
                 headers:{
-                    "Cookie":this._metaData.parsedCookies,
-                    "X-Csrftoken":csrftoken,
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
-                    "Origin": "https://scratch.mit.edu",
-                    "Referer": `https://scratch.mit.edu/`,
-                    "Content-Type": "application/json",
+                    "x-csrftoken":csrftoken,
                     "x-requested-with":"XMLHttpRequest",
-                    "priority":"u=1, i",
-                    "content-length":"0",
+                    "cookie":this.metaData.parsedCookies,
+                    "content-type":"application/json",
+                    "referer":`https://scratch.mit.edu/users/${this.targetUserName}/`,
+                    "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+                    "origin":"https://scratch.mit.edu",
                 },
                 body:JSON.stringify(body)
             }
