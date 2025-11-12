@@ -1,3 +1,5 @@
+# [document](https://github.com/itijuku/scratchtool/wiki/document)
+
 # Sample program
 ```typescript
 import {scratchtool} from "scratchtool";
