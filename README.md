@@ -28,12 +28,12 @@ const user = st.connect_user("name")
 ```
 
 ## st.UserClass
-##### Attributers:
+#### Attributers:
 ```typescript
 
 ```
 
-##### Methods:
+#### Methods:
 ```typescript
 user.follow();
 user.unfollow();
@@ -53,7 +53,7 @@ const project = st.connect_project("projectId")
 ```
 
 ## st.ProjectClass
-##### Attributers:
+#### Attributers:
 ```typescript
 project.id
 project.url
@@ -75,7 +75,7 @@ project.views
 project.project_token
 ```
 
-##### Methods:
+#### Methods:
 ```typescript
 project.post_view();
 project.love();
