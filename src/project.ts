@@ -266,7 +266,12 @@ export class project{
     }
 
     async reply_comment(content:string,parent_id:string){
-        const cd = await comment.buildForPost(content,this.metaData,parent_id);
-        cd.reply_comment();
+        const cd = await comment.buildForPost(content,this.metaData,parent_id,this.projectMetaData);
+        cd.reply_comment_inProject();
+    }
+    
+    async get_comment(number:number){
+        const cd = await comment.buildForGet(number,this.metaData,this.projectMetaData);
+        return await cd.get_comment_inProject();
     }
 }

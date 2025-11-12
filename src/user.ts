@@ -142,7 +142,7 @@ export class user{
 
     async reply_comment(content:string,parent_id:string){
         const cd = await comment.buildForPost(content,this.metaData,parent_id);
-        cd.reply_comment();
+        cd.reply_comment_inUser();
     }
 
     async delete_comment(comment_id:string,){
