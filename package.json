@@ -1,15 +1,16 @@
 {
   "name": "scratchtool",
   "version": "1.0.0",
-  "main": "scratchtool.js",
+  "main": "dist/scratchtool.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": ["scratch","node","module","scratchtool","scratchattach"],
+  "author": "itijuku",
+  "license": "MIT",
+  "description": "scratch library",
+  "files":["dist"],
   "devDependencies": {
     "@types/cheerio": "^0.22.35",
     "@types/node-notifier": "^8.0.5",

@@ -2,4 +2,4 @@ dist/
 memo/
 node_modules/
 test/
-src/client.ts
+src/client.ts*
