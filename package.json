@@ -6,16 +6,27 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["scratch","node","module","scratchtool","scratchattach"],
+  "keywords": [
+    "scratch",
+    "node",
+    "module",
+    "scratchtool",
+    "scratchattach"
+  ],
   "author": "itijuku",
   "license": "MIT",
   "description": "scratch library",
-  "files":["dist"],
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@types/cheerio": "^0.22.35",
     "@types/node-notifier": "^8.0.5",
     "@types/selenium-webdriver": "^4.35.3",
     "@types/ws": "^8.18.1",
     "chromedriver": "^142.0.1"
+  },
+  "dependencies": {
+    "scratchtool": "^1.0.1"
   }
 }

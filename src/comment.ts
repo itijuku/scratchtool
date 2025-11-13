@@ -74,7 +74,7 @@ export class comment{
 
         const author = projectMetaData.metaDatasJson["author"]["username"];
         const x_token = metaData.otherMetaDatas["x-token"] || "";
-        console.log(`https://api.scratch.mit.edu/users/${author}/projects/${projectMetaData.projectId}/comments/${parentId}`)
+
         const res = await fetch(
             `https://api.scratch.mit.edu/users/${author}/projects/${projectMetaData.projectId}/comments/${parentId}`,
             {
@@ -95,7 +95,6 @@ export class comment{
         }
 
         const resJson = await res.json();
-        console.log(resJson)
 
         return new comment(content,parentId,metaData,"",0,projectMetaData,resJson["author"]["id"]);
     }
@@ -136,6 +135,11 @@ export class comment{
         }
 
         const resJson = await res.json();
+
+        const returnData = await commentMetaData.commentObjectParser(resJson,this.metaData,this.projectMetaData);
+        if(!returnData || typeof returnData === "string"){
+            throw new Error("");
+        }
         return await commentMetaData.commentObjectParser(resJson,this.metaData,this.projectMetaData);
     }
 

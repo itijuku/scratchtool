@@ -1,5 +1,6 @@
 import {user} from "./user.js";
 import {project} from "./project.js";
+import {commentMetaData} from "./comment.js";
 
 function sleep(ms:number):Promise<void>{
     return new Promise(resolve=>setTimeout(resolve,ms));
