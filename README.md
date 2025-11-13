@@ -89,3 +89,29 @@ project.unfavorite();
 project.post_comment();
 project.reply_comment();
 ```
+
+
+# Comment
+Connect a comment by Id
+```typescript
+
+```
+
+## st.CommentClass
+#### Attributers:
+```typescript
+comment.id
+comment.parent_id
+comment.commentee_id
+comment.content
+comment.datetime_created
+comment.author_name
+comment.author_id
+comment.reply_count
+```
+
+#### Methods:
+```typescript
+comment.reply("text");
+comment.get_replies();
+```
