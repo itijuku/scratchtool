@@ -1,6 +1,6 @@
 import {user} from "./user.js";
 import {project} from "./project.js";
-import {commentMetaData} from "./comment.js";
+import {studio} from "./studio.js";
 
 function sleep(ms:number):Promise<void>{
     return new Promise(resolve=>setTimeout(resolve,ms));
@@ -137,5 +137,9 @@ export class scratchtool{
 
     create_project(title:string = "title"){
         return project.create_project_build(title,new metaData(this.username,this.password,this.cookies,this.otherMetaDatas));
+    }
+
+    connect_studio(studioId:string){
+        return studio.build(studioId,new metaData(this.username,this.password,this.cookies,this.otherMetaDatas));
     }
 }

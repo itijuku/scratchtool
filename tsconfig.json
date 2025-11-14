@@ -5,7 +5,7 @@
     "allowSyntheticDefaultImports": true,
   
     // File Layout
-    "rootDir": "./",
+    "rootDir": ".",
     "outDir": "./dist",
 
     // Environment Settings
@@ -20,7 +20,7 @@
 
     // Other Outputs
     "sourceMap": false,
-    "declaration": false,
+    "declaration": true,
     "declarationMap": false,
 
     // Stricter Typechecking Options

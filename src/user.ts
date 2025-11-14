@@ -3,6 +3,26 @@ import * as cheerio from "cheerio";
 import {metaData} from "./scratchtool.js"
 import {comment} from "./comment.js"
 
+export class userMetaDataForV3{
+    username:string;
+    id:string = "";
+    thumbnail_url:string = "";
+    
+    constructor(object:{[name:string]:any}){
+        this.username = object["username"];
+        this.id = object["id"];
+    }
+
+    static userObjectParser(objects:{[name:string]:any}[]){
+        let obj = [];
+        for(const d of objects){
+            obj.push(new userMetaDataForV3(d));
+        }
+
+        return obj;
+    }
+}
+
 export class userMetaData{
     username:string;
     id:string = "";
@@ -11,7 +31,7 @@ export class userMetaData{
     constructor(username:string){
         this.username = username;
     }
-    async init(){
+    async initForV2(){
         const res = await fetch(
             `https://scratch.mit.edu/site-api/comments/user/${this.username}/?page=1`,
             {
@@ -46,7 +66,7 @@ export class user{
 
     static async build(username:string,metaData:metaData){
         const md = await new userMetaData(username);
-        await md.init();
+        await md.initForV2();
         return new user(username,metaData,md);
     }
 

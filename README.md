@@ -90,6 +90,22 @@ project.post_comment();
 project.reply_comment();
 ```
 
+# studios
+Connect a studio by Id
+```typescript
+const studio = st.connect_studio("studioId")
+```
+
+## st.StudioClass
+#### Attributers:
+```typescript
+
+```
+#### Methods:
+```typescript
+studio.invite_curator("username");
+studio.get_curator(number=24);
+```
 
 # Comment
 Connect a comment by Id
