@@ -88,6 +88,7 @@ project.unfavorite();
 
 project.post_comment();
 project.reply_comment();
+project.get_comment();
 ```
 
 # studios
