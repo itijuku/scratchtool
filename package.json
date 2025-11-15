@@ -1,6 +1,6 @@
 {
   "name": "scratchtool",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "main": "dist/src/scratchtool.js",
   "type": "module",
   "scripts": {
@@ -11,7 +11,8 @@
     "node",
     "module",
     "scratchtool",
-    "scratchattach"
+    "scratchattach",
+    "bot"
   ],
   "author": "itijuku",
   "license": "MIT",
@@ -21,13 +22,9 @@
     "db/"
   ],
   "devDependencies": {
-    "@types/cheerio": "^0.22.35",
-    "@types/node-notifier": "^8.0.5",
-    "@types/selenium-webdriver": "^4.35.3",
-    "@types/ws": "^8.18.1",
-    "chromedriver": "^142.0.1"
+    "@types/cheerio": "^0.22.35"
   },
   "dependencies": {
-    "scratchtool": "^1.0.3"
+    "scratchtool": "^1.0.8"
   }
 }

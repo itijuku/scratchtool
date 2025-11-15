@@ -1,7 +1,7 @@
 import * as cheerio from "cheerio";
 
 import {metaData} from "./scratchtool.js"
-import {comment} from "./comment.js"
+import {commentForUser} from "./comment.js"
 
 export class userMetaDataForV3{
     username:string;
@@ -156,17 +156,17 @@ export class user{
     }
 
     async post_comment(content:string){
-        const cd = await comment.buildForPost(content,this.metaData);
-        cd.post_comment_inUser();
+        const cd = await commentForUser.buildForPost(content,this.metaData,"",this.userMetaData);
+        cd.post_comment();
     }
 
     async reply_comment(content:string,parent_id:string){
-        const cd = await comment.buildForPost(content,this.metaData,parent_id);
-        cd.reply_comment_inUser();
+        const cd = await commentForUser.buildForPost(content,this.metaData,parent_id,this.userMetaData);
+        cd.reply_comment();
     }
 
     async delete_comment(comment_id:string,){
-        const cd = await comment.buildForDelete(comment_id,this.metaData);
-        cd.delete_comment_inUser();
+        const cd = await commentForUser.buildForDelete(comment_id,this.metaData,this.userMetaData);
+        cd.delete_comment();
     }
 }

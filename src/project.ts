@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 import {metaData} from "./scratchtool.js"
-import {comment} from "./comment.js"
+import {commentForProject} from "./comment.js"
 import {user} from "./user.js"
 
 export class projectMetaData{ 
@@ -261,18 +261,24 @@ export class project{
         }
     }
 
-    async post_comment(content:string){
-        const cd = await comment.buildForPost(content,this.metaData);
-        cd.post_comment_inProject(this.targetProjectId);
+    async get_comment(number:number){
+        const cd = await commentForProject.buildForGet(number,this.metaData,this.projectMetaData);
+        return await cd.get_comment();
     }
 
-    async reply_comment(content:string,parent_id:string){
-        const cd = await comment.buildForPost(content,this.metaData,parent_id,this.projectMetaData);
-        cd.reply_comment_inProject();
+    async post_comment(content:string){
+        const cd = await commentForProject.buildForPost(content,this.metaData,"",this.projectMetaData);
+        cd.post_comment();
     }
-    
-    async get_comment(number:number){
-        const cd = await comment.buildForGet(number,this.metaData,this.projectMetaData);
-        return await cd.get_comment_inProject();
+
+
+    async reply_comment(content:string,parent_id:string){
+        const cd = await commentForProject.buildForPost(content,this.metaData,parent_id,this.projectMetaData);
+        cd.reply_comment();
+    }
+
+    async delete_comment(commentId:string){
+        const cd = await commentForProject.buildForDelete(commentId,this.metaData,this.projectMetaData);
+        cd.delete_comment();
     }
 }

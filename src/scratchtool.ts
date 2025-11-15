@@ -1,6 +1,7 @@
 import {user} from "./user.js";
 import {project} from "./project.js";
 import {studio} from "./studio.js";
+import {ws} from "./ws.js";
 
 function sleep(ms:number):Promise<void>{
     return new Promise(resolve=>setTimeout(resolve,ms));
@@ -141,5 +142,9 @@ export class scratchtool{
 
     connect_studio(studioId:string){
         return studio.build(studioId,new metaData(this.username,this.password,this.cookies,this.otherMetaDatas));
+    }
+
+    async connect_tw_cloud(projectId:string){
+        return await ws.buildForTw(projectId,new metaData(this.username,this.password,this.cookies,this.otherMetaDatas))
     }
 }

@@ -17,77 +17,148 @@ export class studio{
         return new studio(projectId,metaData);
     }
 
-    async get_curators(number:number=40){
+    async get_curators(number:number=40,offset:number=0){
         let ress:{[name:string]:string}[] = [];
-        
-        if(number <= 40){
-            const res = await fetch(
-                `https://api.scratch.mit.edu/studios/${this.targetStudioId}/curators/?limit=${number}&offset=0`,
-                {
-                    method:"GET",
-                    headers:{
-                        "content-type":"application/json",
-                        "referer":`https://scratch.mit.edu/`,
-                        "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
-                        "origin":"https://scratch.mit.edu",
-                    },
+        if(offset){
+            if(number <= 40){
+                const res = await fetch(
+                    `https://api.scratch.mit.edu/studios/${this.targetStudioId}/curators/?limit=${number}&offset=${offset}`,
+                    {
+                        method:"GET",
+                        headers:{
+                            "content-type":"application/json",
+                            "referer":`https://scratch.mit.edu/`,
+                            "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+                            "origin":"https://scratch.mit.edu",
+                        },
+                    }
+                );
+
+                if(Math.floor(res.status/100) !== 2){
+                    throw new Error(`エラー ステータスコード:${res.status}`);
                 }
-            );
 
-            if(Math.floor(res.status/100) !== 2){
-                throw new Error(`エラー ステータスコード:${res.status}`);
+                const resJson = await res.json();
+
+                ress = resJson;
+            }else{
+                for(let i=0;i<Math.ceil(number/40);i++){
+                    if(i === Math.ceil(number/40) - 1){
+                        const res = await fetch(
+                            `https://api.scratch.mit.edu/studios/${this.targetStudioId}/curators/?limit=${number%40}&offset=${i*40+offset}`,
+                            {
+                                method:"GET",
+                                headers:{
+                                    "content-type":"application/json",
+                                    "referer":`https://scratch.mit.edu/`,
+                                    "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+                                    "origin":"https://scratch.mit.edu",
+                                },
+                            }
+                        );
+
+                        if(Math.floor(res.status/100) !== 2){
+                            throw new Error(`エラー ステータスコード:${res.status}`);
+                        }
+
+                        const resJson = await res.json();
+
+                        ress = [...ress,...resJson];
+                    }else{
+                        const res = await fetch(
+                            `https://api.scratch.mit.edu/studios/${this.targetStudioId}/curators/?limit=${40}&offset=${i*40+offset}`,
+                            {
+                                method:"GET",
+                                headers:{
+                                    "content-type":"application/json",
+                                    "referer":`https://scratch.mit.edu/`,
+                                    "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+                                    "origin":"https://scratch.mit.edu",
+                                },
+                            }
+                        );
+
+                        if(Math.floor(res.status/100) !== 2){
+                            throw new Error(`エラー ステータスコード:${res.status}`);
+                        }
+
+                        const resJson = await res.json();
+
+                        ress = [...ress,...resJson];
+                    }
+                }
             }
-
-            const resJson = await res.json();
-
-            ress = resJson;
         }else{
-            for(let i=0;i<Math.ceil(number/40);i++){
-                if(i === Math.ceil(number/40) - 1){
-                    const res = await fetch(
-                        `https://api.scratch.mit.edu/studios/${this.targetStudioId}/curators/?limit=${number%40}&offset=${i*40}`,
-                        {
-                            method:"GET",
-                            headers:{
-                                "content-type":"application/json",
-                                "referer":`https://scratch.mit.edu/`,
-                                "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
-                                "origin":"https://scratch.mit.edu",
-                            },
-                        }
-                    );
-
-                    if(Math.floor(res.status/100) !== 2){
-                        throw new Error(`エラー ステータスコード:${res.status}`);
+            if(number <= 40){
+                const res = await fetch(
+                    `https://api.scratch.mit.edu/studios/${this.targetStudioId}/curators/?limit=${number}&offset=0`,
+                    {
+                        method:"GET",
+                        headers:{
+                            "content-type":"application/json",
+                            "referer":`https://scratch.mit.edu/`,
+                            "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+                            "origin":"https://scratch.mit.edu",
+                        },
                     }
+                );
 
-                    const resJson = await res.json();
+                if(Math.floor(res.status/100) !== 2){
+                    throw new Error(`エラー ステータスコード:${res.status}`);
+                }
 
-                    ress = [...ress,...resJson];
-                }else{
-                    const res = await fetch(
-                        `https://api.scratch.mit.edu/studios/${this.targetStudioId}/curators/?limit=${40}&offset=${i*40}`,
-                        {
-                            method:"GET",
-                            headers:{
-                                "content-type":"application/json",
-                                "referer":`https://scratch.mit.edu/`,
-                                "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
-                                "origin":"https://scratch.mit.edu",
-                            },
+                const resJson = await res.json();
+
+                ress = resJson;
+            }else{
+                for(let i=0;i<Math.ceil(number/40);i++){
+                    if(i === Math.ceil(number/40) - 1){
+                        const res = await fetch(
+                            `https://api.scratch.mit.edu/studios/${this.targetStudioId}/curators/?limit=${number%40}&offset=${i*40}`,
+                            {
+                                method:"GET",
+                                headers:{
+                                    "content-type":"application/json",
+                                    "referer":`https://scratch.mit.edu/`,
+                                    "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+                                    "origin":"https://scratch.mit.edu",
+                                },
+                            }
+                        );
+
+                        if(Math.floor(res.status/100) !== 2){
+                            throw new Error(`エラー ステータスコード:${res.status}`);
                         }
-                    );
 
-                    if(Math.floor(res.status/100) !== 2){
-                        throw new Error(`エラー ステータスコード:${res.status}`);
+                        const resJson = await res.json();
+
+                        ress = [...ress,...resJson];
+                    }else{
+                        const res = await fetch(
+                            `https://api.scratch.mit.edu/studios/${this.targetStudioId}/curators/?limit=${40}&offset=${i*40}`,
+                            {
+                                method:"GET",
+                                headers:{
+                                    "content-type":"application/json",
+                                    "referer":`https://scratch.mit.edu/`,
+                                    "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+                                    "origin":"https://scratch.mit.edu",
+                                },
+                            }
+                        );
+
+                        if(Math.floor(res.status/100) !== 2){
+                            throw new Error(`エラー ステータスコード:${res.status}`);
+                        }
+
+                        const resJson = await res.json();
+
+                        ress = [...ress,...resJson];
                     }
-
-                    const resJson = await res.json();
-
-                    ress = [...ress,...resJson];
                 }
             }
         }
+
 
         const datas = userMetaDataForV3.userObjectParser(ress);
         
