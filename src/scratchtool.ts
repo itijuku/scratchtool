@@ -48,12 +48,22 @@ export class scratchtool{
         "_ga_3FZMRJWZR6":"GS2.1.s1762908845$o1$g0$t1762908845$j60$l0$h0",
     };
 
-    constructor(username:string,password:string){
+    private constructor(username:string,password:string,cookies:{[name:string]:any},otherMetaDatas:{[name:string]:any}){
         this.username = username;
         this.password = password;
+        this.cookies = cookies;
+        this.otherMetaDatas = otherMetaDatas;
     }
 
-    async login(){
+    static async login(username:string,password:string){
+        let cookies:{[name:string]:any} = {
+            "permissions":"{}",
+            "_ga":"GA1.1.951681941.1762908846",
+            "_ga_3FZMRJWZR6":"GS2.1.s1762908845$o1$g0$t1762908845$j60$l0$h0",
+        };
+
+        let otherMetaDatas:{[name:string]:string} = {};
+
         let res = await fetch("https://scratch.mit.edu/csrf_token/");
         let setcookies = res.headers.get("set-cookie");
         if(Math.floor(res.status/100) !== 2){
@@ -70,22 +80,22 @@ export class scratchtool{
                 break;
             }
         }
-        this.cookies["scratchcsrftoken"] = token;
+        cookies["scratchcsrftoken"] = token;
 
         res = await fetch("https://scratch.mit.edu/accounts/login/",{
             method:"POST",
             headers:{
-                "x-csrftoken":this.cookies["scratchcsrftoken"],
+                "x-csrftoken":cookies["scratchcsrftoken"],
                 "x-requested-with":"XMLHttpRequest",
-                "cookie":metaData.getParsedCookies(this.cookies),
+                "cookie":metaData.getParsedCookies(cookies),
                 "content-type":"application/json",
                 "referer":"https://scratch.mit.edu/",
                 "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
                 "origin":"https://scratch.mit.edu",
             },
             body:JSON.stringify({
-                "username":this.username,
-                "password":this.password,
+                "username":username,
+                "password":password,
                 "useMessages":true,
             })
         });
@@ -106,15 +116,15 @@ export class scratchtool{
             }
         }
 
-        this.cookies["scratchsessionsid"] = session;
+        cookies["scratchsessionsid"] = session;
         let resJson = await res.json();
-        this.otherMetaDatas["x-token"] = resJson[0]["token"];
-        this.otherMetaDatas["id"] = resJson[0]["id"];
+        otherMetaDatas["x-token"] = resJson[0]["token"];
+        otherMetaDatas["id"] = resJson[0]["id"];
 
         res = await fetch("https://scratch.mit.edu/session/",{
             method:"GET",
             headers:{
-                "cookie":metaData.getParsedCookies(this.cookies),
+                "cookie":metaData.getParsedCookies(cookies),
                 "x-requested-with":"XMLHttpRequest"
             }
         });
@@ -123,9 +133,11 @@ export class scratchtool{
         }
 
         resJson = await res.json();
-        this.cookies["permissions"] = resJson["permissions"];
-        this.otherMetaDatas["user"] = resJson["user"];
-        this.otherMetaDatas["flags"] = resJson["flags"];
+        cookies["permissions"] = resJson["permissions"];
+        otherMetaDatas["user"] = resJson["user"];
+        otherMetaDatas["flags"] = resJson["flags"];
+
+        return new scratchtool(username,password,cookies,otherMetaDatas);
     }
 
     connect_user(username:string){

@@ -6,7 +6,7 @@
 import {scratchtool} from "scratchtool";
 
 (async()=>{
-    const st = new scratchtool("username","password");
+    const st = await scratchtool.login("username","password");
 
     const project = await st.connect_project("projectId");
     console.log(project.views);
@@ -21,13 +21,31 @@ npm install scratchtool
 
 # Logging in
 ```typescript
-const st = new scratchtool("username","password");
+const st = await scratchtool.login("username","password");
+```
+
+# Clouds
+Connect a user by name
+```typescript
+const cloud = st.connect_tw_cloud("projectId");
+```
+
+## st.CloudClass
+#### Attributers:
+```typescript
+
+```
+
+#### Methods:
+```typescript
+cloud.set_var("variable","value");
+cloud.get_var("variable");
 ```
 
 # Users
 Connect a user by name
 ```typescript
-const user = st.connect_user("name")
+const user = st.connect_user("name");
 ```
 
 ## st.UserClass

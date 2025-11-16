@@ -1,4 +1,3 @@
 dist/client*
 dist/practicalExample/*
-dist/src/client*
-test/*
+dist/test/*
