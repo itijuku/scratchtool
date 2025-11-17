@@ -7,11 +7,11 @@ function sleep(ms:number):Promise<void>{
 }
 
 export class ws{
-    wss:WebSocket;
+    private wss:WebSocket;
     projectId:string;
     metaData:metaData;
 
-    variableDatas:{[name:string]:any} = {};
+    private variableDatas:{[name:string]:any} = {};
 
     constructor(wss:WebSocket,projectId:string,metaData:metaData){
         this.wss = wss;
@@ -42,6 +42,34 @@ export class ws{
                 resolve(_wss); 
             });
 
+            wss.on("error",(e:any)=>{
+                reject(e);
+            });
+        })
+    }
+
+    static async buildForSh(projectId:string,metaData:metaData):Promise<ws>{
+        const wss = new WebSocket("wss://clouddata.scratch.mit.edu/",{
+            headers:{
+                "Origin": "https://scratch.mit.edu",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36",
+            }
+        })
+        return new Promise((resolve,reject)=>{
+            wss.on("open",async()=>{
+                await wss.send(JSON.stringify({
+                    "method": "handshake",
+                    "user": metaData.username,
+                    "project_id": projectId
+                }));
+
+                const _wss = new ws(wss,projectId,metaData);
+
+                await sleep(250);
+                
+                resolve(_wss); 
+            });
+
             wss.on("error",(e)=>{
                 reject(e);
             });
@@ -51,6 +79,7 @@ export class ws{
     private async getMessage(){
         this.wss.on("message",(msg:string)=>{
             const json = JSON.parse(msg);
+            console.log(json)
             this.variableDatas[json["name"]] = json["value"];
         });
     }

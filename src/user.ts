@@ -24,31 +24,56 @@ export class userMetaDataForV3{
 }
 
 export class userMetaData{
+    metaData:metaData;
+    thumbnail_url:string = "";
+
     username:string;
     id:string = "";
-    thumbnail_url:string = "";
+    icon_url:string = "";
+    about_me:string = "";
+    wiwo:string = "";
+    country:string = "";
     
-    constructor(username:string){
+    constructor(username:string,metaData:metaData){
         this.username = username;
+        this.metaData = metaData;
     }
     async initForV2(){
         const res = await fetch(
-            `https://scratch.mit.edu/site-api/comments/user/${this.username}/?page=1`,
+            `https://scratch.mit.edu/users/${this.username}/`,
             {
                 method:"GET",
+                headers:{
+                    "Cookie": this.metaData.parsedCookies, 
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                    "Accept-Language": "ja,en-US;q=0.9,en;q=0.8",
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                    "Referer": "https://scratch.mit.edu/"
+                }
             }
         )
 
         const html = await res.text();
+        // console.log(html)
 
         const $ = cheerio.load(html);
-        const png = $("img").eq(2);
-        const src = png.attr("src");
+        const src = $(`a[href="/users/${this.username}/"] img`).eq(0).attr("src");
+        console.log(src)
+        const location = $(".location").eq(0).text();
+        this.country = location;
+
+        const textarea = $("textarea");
+
+        const bio = textarea.eq(0).text();
+        this.about_me = bio;
+        const wiwo = textarea.eq(1).text();
+        this.wiwo = wiwo;
+
         if(src){
             const img = src.split("/")[src.split("/").length - 1];
             this.id = img ? String(img.split("_")[0]) : "";
-
             this.thumbnail_url = `//uploads.scratch.mit.edu/users/avatars/${this.id}.png`;
+            this.icon_url = this.thumbnail_url;
         }
     }
 }
@@ -57,15 +82,30 @@ export class user{
     private targetUserName:string;
     private metaData:metaData;
     private userMetaData:userMetaData;
+    private thumbnail_url:string;
+
+    username:string;
+    id:string = "";
+    icon_url:string = "";
+    about_me:string = "";
+    wiwo:string = "";
+    country:string = "";
 
     private constructor(username:string,metaData:metaData,userMetaData:userMetaData){
         this.targetUserName = username;
         this.metaData = metaData;
         this.userMetaData = userMetaData;
+        this.thumbnail_url = userMetaData.thumbnail_url;
+        
+        this.username = userMetaData.username;
+        this.icon_url = userMetaData.thumbnail_url
+        this.about_me = userMetaData.about_me
+        this.wiwo = userMetaData.wiwo
+        this.country = userMetaData.country
     }
 
     static async build(username:string,metaData:metaData){
-        const md = await new userMetaData(username);
+        const md = await new userMetaData(username,metaData);
         await md.initForV2();
         return new user(username,metaData,md);
     }

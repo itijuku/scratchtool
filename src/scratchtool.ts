@@ -159,4 +159,8 @@ export class scratchtool{
     async connect_tw_cloud(projectId:string){
         return await ws.buildForTw(projectId,new metaData(this.username,this.password,this.cookies,this.otherMetaDatas))
     }
+
+    async connect_scratch_cloud(projectId:string){
+        return await ws.buildForSh(projectId,new metaData(this.username,this.password,this.cookies,this.otherMetaDatas))
+    }
 }

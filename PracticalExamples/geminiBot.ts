@@ -7,8 +7,7 @@ function sleep(ms:number):Promise<void>{
 }
 
 (async()=>{
-    const st = new scratchtool("username","password");
-    await st.login();
+    const st = await scratchtool.login("username","password",);
 
     const projectIds = [""];
     let projects:[string,any,boolean][] = [];
