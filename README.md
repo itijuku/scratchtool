@@ -51,7 +51,12 @@ const user = st.connect_user("name");
 ## st.UserClass
 #### Attributers:
 ```typescript
-
+user.username
+user.id
+user.icon_url
+user.about_me
+user.wiwo
+user.country
 ```
 
 #### Methods:

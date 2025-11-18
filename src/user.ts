@@ -54,11 +54,18 @@ export class userMetaData{
         )
 
         const html = await res.text();
-        // console.log(html)
 
         const $ = cheerio.load(html);
-        const src = $(`a[href="/users/${this.username}/"] img`).eq(0).attr("src");
-        console.log(src)
+        const script = $("script").eq(6).text();
+        const match = script.match(/Scratch\.INIT_DATA\.PROFILE\s*=\s*(\{[\s\S]*?\})\s*(?=Scratch\.INIT_DATA\.)/);
+
+        if(!match || !match.length || !match[1]){
+            throw new Error("not found data");
+        }
+        const scriptJson = eval(`(${match[1]})`);
+        const id = scriptJson["model"]["userId"] || "";
+        const thumbnail_url = scriptJson["model"]["thumbnail_url"] || "";
+
         const location = $(".location").eq(0).text();
         this.country = location;
 
@@ -69,12 +76,9 @@ export class userMetaData{
         const wiwo = textarea.eq(1).text();
         this.wiwo = wiwo;
 
-        if(src){
-            const img = src.split("/")[src.split("/").length - 1];
-            this.id = img ? String(img.split("_")[0]) : "";
-            this.thumbnail_url = `//uploads.scratch.mit.edu/users/avatars/${this.id}.png`;
-            this.icon_url = this.thumbnail_url;
-        }
+        this.id = id;
+        this.thumbnail_url = thumbnail_url;
+        this.icon_url = thumbnail_url;
     }
 }
 
@@ -82,7 +86,6 @@ export class user{
     private targetUserName:string;
     private metaData:metaData;
     private userMetaData:userMetaData;
-    private thumbnail_url:string;
 
     username:string;
     id:string = "";
@@ -95,9 +98,9 @@ export class user{
         this.targetUserName = username;
         this.metaData = metaData;
         this.userMetaData = userMetaData;
-        this.thumbnail_url = userMetaData.thumbnail_url;
         
         this.username = userMetaData.username;
+        this.id = userMetaData.id;
         this.icon_url = userMetaData.thumbnail_url
         this.about_me = userMetaData.about_me
         this.wiwo = userMetaData.wiwo
