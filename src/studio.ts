@@ -1,8 +1,9 @@
 import fs from "fs";
 import path from "path";
 
-import {metaData} from "./scratchtool.js"
-import {userMetaDataForV3} from "./user.js"
+import {metaData} from "./scratchtool.js";
+import {userMetaDataForV3} from "./user.js";
+import {activity} from "./activity.js";
 
 export class studio{
     private targetStudioId:string;
@@ -187,6 +188,11 @@ export class studio{
         if(Math.floor(res.status/100) !== 2){
             throw new Error(`エラー ステータスコード:${res.status}`);
         }
+    }
+
+    async activity(number:number=40,offset:number=0){
+        const ab = await activity.build(this.targetStudioId,this.metaData);
+        return ab.activity(number,offset);
     }
 }
 

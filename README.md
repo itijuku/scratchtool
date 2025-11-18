@@ -67,9 +67,9 @@ user.unfollow();
 user.following_count();
 user.follower_count();
 
-user.post_comment();
-user.reply_comment();
-user.delete_comment();
+user.post_comment("content");
+user.reply_comment("content","parentId");
+user.delete_comment("commentId");
 ```
 
 # Projects
@@ -109,9 +109,9 @@ project.favorite();
 project.unlove();
 project.unfavorite();
 
-project.post_comment();
-project.reply_comment();
-project.get_comment();
+project.post_comment("content");
+project.reply_comment("content","parentId");
+project.get_comment(number=40);
 ```
 
 # studios
@@ -128,7 +128,8 @@ const studio = st.connect_studio("studioId")
 #### Methods:
 ```typescript
 studio.invite_curator("username");
-studio.get_curator(number=24);
+studio.get_curator(number=24,offset=0);
+studio.activity(number=40);
 ```
 
 # Comment
@@ -153,5 +154,5 @@ comment.reply_count
 #### Methods:
 ```typescript
 comment.reply("text");
-comment.get_replies();
+comment.get_replies(number=40);
 ```

@@ -1,7 +1,7 @@
 import * as cheerio from "cheerio";
 
-import {metaData} from "./scratchtool.js"
-import {commentForUser} from "./comment.js"
+import {metaData} from "./scratchtool.js";
+import {commentForUser} from "./comment.js";
 
 export class userMetaDataForV3{
     username:string;

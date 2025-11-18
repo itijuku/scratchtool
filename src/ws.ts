@@ -1,6 +1,6 @@
 import {WebSocket} from "ws";
 
-import {metaData} from "./scratchtool.js"
+import {metaData} from "./scratchtool.js";
 
 function sleep(ms:number):Promise<void>{
     return new Promise(resolve=>setTimeout(resolve,ms));

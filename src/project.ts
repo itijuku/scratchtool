@@ -1,9 +1,8 @@
 import fs from "fs";
 import path from "path";
 
-import {metaData} from "./scratchtool.js"
-import {commentForProject} from "./comment.js"
-import {user} from "./user.js"
+import {metaData} from "./scratchtool.js";
+import {commentForProject} from "./comment.js";
 
 export class projectMetaData{ 
     projectId:string;

@@ -1,6 +1,6 @@
 import type { projectMetaData } from "./project.js";
 import type { userMetaData } from "./user.js";
-import {metaData} from "./scratchtool.js"
+import {metaData} from "./scratchtool.js";
 
 export class commentMetaDataForProject{
     object:{[name:string]:any,};
