@@ -3,6 +3,7 @@ import path from "path";
 
 import {metaData} from "./scratchtool.js";
 import {commentForProject} from "./comment.js";
+import {userMetaData} from "./user.js";
 
 export class projectMetaData{ 
     projectId:string;
@@ -39,6 +40,7 @@ export class project{
     private targetProjectId:string;
     private metaData:metaData;
     private projectMetaData:projectMetaData;
+    private userMetaData:userMetaData;
 
     id:string = "";
     url:string = "";
@@ -59,10 +61,11 @@ export class project{
     views:number = NaN;
     project_token:string = "";
 
-    private constructor(projectId:string,metaDat:metaData,projectMetaData:projectMetaData){
+    private constructor(projectId:string,metaDat:metaData,projectMetaData:projectMetaData,userMetaData:userMetaData){
         this.targetProjectId = projectId;
         this.metaData = metaDat;
         this.projectMetaData = projectMetaData;
+        this.userMetaData = userMetaData;
 
         this.id = projectMetaData.metaDatasJson["id"];
         this.url = `https://scratch.mit.edu/projects/${projectMetaData.metaDatasJson["id"]}`;
@@ -87,7 +90,8 @@ export class project{
     static async build(projectId:string,metaData:metaData){
         const md = await new projectMetaData(projectId,metaData);
         await md.init();
-        return new project(projectId,metaData,md);
+        const _userMetaData = new userMetaData(metaData.username,metaData);
+        return new project(projectId,metaData,md,_userMetaData);
     }
 
     static async create_project_build(title:string,metaData:metaData){
@@ -126,8 +130,90 @@ export class project{
         const projectId = resJson["content-name"];
         const md = await new projectMetaData(projectId,metaData);
         await md.init();
-        return new project(projectId,metaData,md);
+
+        const _userMetaData = new userMetaData(metaData.username,metaData);
+
+        const _project = await new project(projectId,metaData,md,_userMetaData);
+        if(title !== "new title")_project.set_title(title);
+        return _project;
         
+    }
+
+    async delete(){
+        const csrftoken = this.metaData.cookies["scratchcsrftoken"] || "";
+        const nowIso = new Date().toISOString();
+        const body = {
+            "commenters_count":0,
+            "creator":{
+                "admin":false,
+                "pk":this.userMetaData.id,
+                "thumbnail_url":this.userMetaData.thumbnail_url,
+                "username":this.metaData.username
+            },
+            "datetime_created":nowIso,
+            "datetime_modified":nowIso,
+            "datetime_shared":null,
+            "favorite_count":this.favorites,
+            "id":this.targetProjectId,
+            "isPublished":false,
+            "love_count":this.loves,
+            "remixers_count":this.remix_count,
+            "thumbnail":`${this.targetProjectId}.png`,
+            "thumbnail_url":`//uploads.scratch.mit.edu/projects/thumbnails/${this.targetProjectId}.png`,
+            "title":this.title,
+            "uncached_thumbnail_url":"\\\\" + this.thumbnail_url.split("//")[1],
+            "view_count":this.views,
+            "visibility":"trshbyusr",            
+        }
+
+        const res = await fetch(
+            `https://scratch.mit.edu/site-api/projects/all/${this.targetProjectId}/`,
+            {
+                method:"PUT",
+                headers:{
+                    "x-csrftoken":csrftoken,
+                    "x-requested-with":"XMLHttpRequest",
+                    "cookie":this.metaData.parsedCookies,
+                    "content-type":"application/json",
+                    "referer":`https://scratch.mit.edu/`,
+                    "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+                    "origin":"https://scratch.mit.edu",
+                },
+                body:JSON.stringify(body),
+            }
+        );
+
+        if(Math.floor(res.status/100) !== 2){
+            throw new Error(`エラー ステータスコード:${res.status}`);
+        }
+    }
+
+    async set_title(title:string){
+        const x_token = this.metaData.otherMetaDatas["x-token"] || "";
+
+        const body = {
+            "title":title
+        }
+
+        const res = await fetch(
+            `https://api.scratch.mit.edu/projects/1244748821`,
+            {
+                method:"PUT",
+                headers:{
+                    "cookie":this.metaData.parsedCookies,
+                    "content-type":"application/json",
+                    "referer":`https://scratch.mit.edu/`,
+                    "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+                    "origin":"https://scratch.mit.edu",
+                    "x-token":x_token,
+                },
+                body:JSON.stringify(body),
+            }
+        );
+
+        if(Math.floor(res.status/100) !== 2){
+            throw new Error(`エラー ステータスコード:${res.status}`);
+        }
     }
 
     async love(){

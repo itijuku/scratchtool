@@ -148,7 +148,7 @@ export class scratchtool{
         return project.build(projectId,new metaData(this.username,this.password,this.cookies,this.otherMetaDatas));
     }
 
-    create_project(title:string = "title"){
+    create_project(title:string = "new title"){
         return project.create_project_build(title,new metaData(this.username,this.password,this.cookies,this.otherMetaDatas));
     }
 
